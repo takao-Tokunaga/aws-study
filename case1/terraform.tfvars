@@ -1,1 +1,0 @@
-my-key = nagao10
