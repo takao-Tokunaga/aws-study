@@ -1,7 +1,7 @@
-terraform-vpc/terraform.tfvars
-terraform-vpc/terraform.tfstate.backup
-terraform-vpc/my-key
-terraform-vpc/my-key.pub
+*.tfstate.backup
+*.tfvars
 **/.terraform/
+**/my-key
+**/my-key.pub
 *.tfstate
 *.tfstate.backup
