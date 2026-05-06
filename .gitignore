@@ -1,0 +1,5 @@
+terraform-vpc/terraform.tfvars
+terraform-vpc/terraform.tfstate.backup
+terraform-vpc/.terraform/
+terraform-vpc/my-key
+terraform-vpc/my-key.pub
