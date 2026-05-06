@@ -16,50 +16,48 @@ resource "aws_instance" "web" {
   vpc_security_group_ids      = [aws_security_group.ec2_sg.id]
   key_name                    = aws_key_pair.my_key.key_name
   associate_public_ip_address = true
+  user_data_replace_on_change = true
 
   user_data = <<-EOF
-              #!/bin/bash
-              yum update -y
+#!/bin/bash
+set -e
+yum update -y
 
-              # Apache & PHP
-              amazon-linux-extras enable php8.0
-              yum clean metadata
-              yum install -y httpd php php-mysqlnd
-              systemctl start httpd
-              systemctl enable httpd
+# PHP 8.0
+amazon-linux-extras enable php8.0
+yum clean metadata
+yum install -y httpd php php-mysqlnd
 
-              # MySQL (MariaDB)
-              yum install -y mariadb105-server
-              systemctl start mariadb
-              systemctl enable mariadb
+# MariaDB
+amazon-linux-extras install mariadb10.5 -y
 
-              # DB作成
-              mysql -e "CREATE DATABASE wordpress;"
-              mysql -e "CREATE USER 'wpuser'@'localhost' IDENTIFIED BY 'password';"
-              mysql -e "GRANT ALL PRIVILEGES ON wordpress.* TO 'wpuser'@'localhost';"
-              mysql -e "FLUSH PRIVILEGES;"
+# 起動
+systemctl enable httpd mariadb
+systemctl start httpd mariadb
+sleep 15
 
-              # WordPress
-              cd /var/www/html
-              wget https://wordpress.org/latest.tar.gz
-              tar -xzf latest.tar.gz
-              cp -r wordpress/* .
+# DB作成
+mysql -u root -e "CREATE DATABASE wordpress;"
+mysql -u root -e "CREATE USER 'wpuser'@'localhost' IDENTIFIED BY 'password';"
+mysql -u root -e "GRANT ALL PRIVILEGES ON wordpress.* TO 'wpuser'@'localhost';"
+mysql -u root -e "FLUSH PRIVILEGES;"
 
-              chown -R apache:apache /var/www/html
+# WordPress
+cd /var/www/html
+wget -q https://wordpress.org/latest.tar.gz
+tar -xzf latest.tar.gz
+cp -r wordpress/* .
+rm -rf wordpress latest.tar.gz
 
-              # wp-config 作成
-              cd /var/www/html
+# wp-config
+cp wp-config-sample.php wp-config.php
+sed -i "s/database_name_here/wordpress/" wp-config.php
+sed -i "s/username_here/wpuser/" wp-config.php
+sed -i "s/password_here/password/" wp-config.php
 
-              cp wp-config-sample.php wp-config.php
-
-              sed -i "s/database_name_here/wordpress/" wp-config.php
-              sed -i "s/username_here/wpuser/" wp-config.php
-              sed -i "s/password_here/password/" wp-config.php
-
-              # Apache再起動
-              systemctl restart httpd
-
-              EOF
+chown -R apache:apache /var/www/html
+systemctl restart httpd
+EOF
   tags = {
     Name = "takao-ec2"
   }
