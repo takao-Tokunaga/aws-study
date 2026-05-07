@@ -5,3 +5,4 @@
 **/my-key.pub
 *.tfstate
 *.tfstate.backup
+echo "case2/LICENSE.txt" >> .gitignore
