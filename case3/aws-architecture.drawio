@@ -1,0 +1,85 @@
+<mxfile host="app.diagrams.net">
+  <diagram id="WjTY9fFqmeqA5q69OCug" name="ページ-1">
+    <mxGraphModel dx="1071" dy="742" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0" adaptiveColors="auto">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="user" parent="1" style="shape=mxgraph.aws4.user;labelBackgroundColor=none;sketch=0;fontStyle=0;labelPosition=center;align=center;verticalLabelPosition=bottom;fillColor=#232F3E;fontColor=#232F3E;strokeColor=none;" value="Internet Users" vertex="1">
+          <mxGeometry height="60" width="60" x="570" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="cf" parent="1" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudfront;labelBackgroundColor=none;sketch=0;fontStyle=0;labelPosition=center;align=center;verticalLabelPosition=bottom;fillColor=#8C4FFF;fontColor=#232F3E;strokeColor=none;" value="Amazon CloudFront&#xa;takao-case3-cf" vertex="1">
+          <mxGeometry height="60" width="60" x="570" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="vpc" parent="1" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_vpc;strokeColor=#8C4FFF;fillColor=#F4F6F6;verticalAlign=top;align=center;spacingTop=25;fontStyle=1;fontSize=14;" value="VPC (10.0.0.0/16)  takao-case3-vpc" vertex="1">
+          <mxGeometry height="880" width="1040" x="80" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="igw" parent="vpc" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.internet_gateway;labelBackgroundColor=none;sketch=0;fontStyle=0;labelPosition=center;align=center;verticalLabelPosition=bottom;fillColor=#8C4FFF;fontColor=#232F3E;strokeColor=none;" value="Internet Gateway&#xa;takao-igw3" vertex="1">
+          <mxGeometry height="60" width="60" x="490" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="alb" parent="vpc" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.application_load_balancer;labelBackgroundColor=none;sketch=0;fontStyle=0;labelPosition=center;align=center;verticalLabelPosition=bottom;fillColor=#E7157B;fontColor=#232F3E;strokeColor=none;" value="Application Load Balancer&#xa;takao-case3-alb" vertex="1">
+          <mxGeometry height="60" width="60" x="490" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="pub1a" parent="vpc" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_public_subnet;strokeColor=#7AA116;fillColor=#F2F6E8;verticalAlign=top;align=center;spacingTop=25;fontStyle=0;fontSize=11;" value="Public Subnet 1a (10.0.1.0/24) ap-northeast-1d&#xa;takao-case3-public-1a" vertex="1">
+          <mxGeometry height="170" width="440" x="20" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="nat" parent="pub1a" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.nat_gateway;labelBackgroundColor=none;sketch=0;fontStyle=0;labelPosition=center;align=center;verticalLabelPosition=bottom;fillColor=#8C4FFF;fontColor=#232F3E;strokeColor=none;" value="NAT Gateway&#xa;takao-case3-nat" vertex="1">
+          <mxGeometry height="60" width="60" x="185" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="pub1c" parent="vpc" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_public_subnet;strokeColor=#7AA116;fillColor=#F2F6E8;verticalAlign=top;align=center;spacingTop=25;fontStyle=0;fontSize=11;" value="Public Subnet 1c (10.0.2.0/24) ap-northeast-1c&#xa;takao-case3-public-1c" vertex="1">
+          <mxGeometry height="170" width="440" x="580" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="priv1a" parent="vpc" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_private_subnet;strokeColor=#147EBA;fillColor=#E6F2F8;verticalAlign=top;align=center;spacingTop=25;fontStyle=0;fontSize=11;" value="Private Subnet 1a (10.0.11.0/24) ap-northeast-1d&#xa;takao-case3-private-1a" vertex="1">
+          <mxGeometry height="170" width="440" x="20" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="ecs_1a" parent="priv1a" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.ecs;labelBackgroundColor=none;sketch=0;fontStyle=0;labelPosition=center;align=center;verticalLabelPosition=bottom;fillColor=#ED7100;fontColor=#232F3E;strokeColor=none;" value="ECS Fargate&#xa;takao-case3-service" vertex="1">
+          <mxGeometry height="60" width="60" x="185" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="priv1c" parent="vpc" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_private_subnet;strokeColor=#147EBA;fillColor=#E6F2F8;verticalAlign=top;align=center;spacingTop=25;fontStyle=0;fontSize=11;" value="Private Subnet 1c (10.0.12.0/24) ap-northeast-1c&#xa;takao-case3-private-1c" vertex="1">
+          <mxGeometry height="170" width="440" x="580" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="ecs_1c" parent="priv1c" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.ecs;labelBackgroundColor=none;sketch=0;fontStyle=0;labelPosition=center;align=center;verticalLabelPosition=bottom;fillColor=#ED7100;fontColor=#232F3E;strokeColor=none;" value="ECS Fargate&#xa;takao-case3-service" vertex="1">
+          <mxGeometry height="60" width="60" x="185" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="efs" parent="vpc" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.efs;labelBackgroundColor=none;sketch=0;fontStyle=0;labelPosition=center;align=center;verticalLabelPosition=bottom;fillColor=#3F8624;fontColor=#232F3E;strokeColor=none;" value="Amazon EFS&#xa;takao-case3-efs" vertex="1">
+          <mxGeometry height="60" width="60" x="490" y="505" as="geometry" />
+        </mxCell>
+        <mxCell id="db1a" parent="vpc" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_private_subnet;strokeColor=#147EBA;fillColor=#E6F2F8;verticalAlign=top;align=center;spacingTop=25;fontStyle=0;fontSize=11;" value="DB Subnet 1a (10.0.21.0/24) ap-northeast-1d&#xa;takao-case3-db-1a" vertex="1">
+          <mxGeometry height="170" width="440" x="20" y="680" as="geometry" />
+        </mxCell>
+        <mxCell id="rds_primary" parent="db1a" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.rds;labelBackgroundColor=none;sketch=0;fontStyle=0;labelPosition=center;align=center;verticalLabelPosition=bottom;fillColor=#C7131F;fontColor=#232F3E;strokeColor=none;" value="RDS MySQL 8.0&#xa;takao-case3-rds" vertex="1">
+          <mxGeometry height="60" width="60" x="185" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="db1c" parent="vpc" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_private_subnet;strokeColor=#147EBA;fillColor=#E6F2F8;verticalAlign=top;align=center;spacingTop=25;fontStyle=0;fontSize=11;" value="DB Subnet 1c (10.0.22.0/24) ap-northeast-1c&#xa;takao-case3-db-1c" vertex="1">
+          <mxGeometry height="170" width="440" x="580" y="680" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="vpc" source="igw" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;" target="alb" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="vpc" source="alb" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;" target="ecs_1a" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="vpc" source="alb" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;" target="ecs_1c" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="vpc" source="ecs_1a" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;" target="rds_primary" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="vpc" source="ecs_1c" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;" target="rds_primary" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="vpc" source="ecs_1a" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;dashed=1;endArrow=open;endFill=0;" target="efs" value="NFS mount">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="vpc" source="ecs_1c" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;dashed=1;endArrow=open;endFill=0;" target="efs" value="NFS mount">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="user" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;" target="cf" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="cf" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;" target="igw" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
