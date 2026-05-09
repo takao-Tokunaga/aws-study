@@ -1,9 +1,27 @@
+# Terraform
+*.tfstate
 *.tfstate.backup
 *.tfvars
 **/.terraform/
+**/.terraform.lock.hcl
+
+# SSH keys
 **/my-key
 **/my-key.pub
-*.tfstate
-*.tfstate.backup
+
+# Node.js
+**/node_modules
+
+# 環境変数
+.env
+.env.*
+
+# macOS
+.DS_Store
+
+# ログ
+*.log
+
+# スキル・ライセンス
 **/LICENSE.txt
 **/SKILL.md

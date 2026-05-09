@@ -51,8 +51,8 @@ resource "aws_cloudfront_distribution" "cf" {
 
     restrictions {
         geo_restriction {
-            restriction_type = "whitelist"
-            locations        = ["JP"]  // 日本のみ許可
+            restriction_type = "none"
+            locations        = []  
         }
     }
 

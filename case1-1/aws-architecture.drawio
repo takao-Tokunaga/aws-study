@@ -1,0 +1,36 @@
+<mxGraphModel adaptiveColors="auto">
+  <root>
+    <mxCell id="0"/>
+    <mxCell id="1" parent="0"/>
+    <mxCell id="user" value="Internet Users" style="shape=mxgraph.aws4.user;labelBackgroundColor=none;sketch=0;fontStyle=0;labelPosition=center;align=center;verticalLabelPosition=bottom;fillColor=#232F3E;fontColor=#232F3E;strokeColor=none;" vertex="1" parent="1">
+      <mxGeometry x="320" y="20" width="60" height="60" as="geometry"/>
+    </mxCell>
+    <mxCell id="vpc" value="VPC (10.0.0.0/16)  takao-vpc" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_vpc;strokeColor=#8C4FFF;fillColor=#F4F6F6;verticalAlign=top;align=center;spacingTop=25;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+      <mxGeometry x="60" y="200" width="600" height="520" as="geometry"/>
+    </mxCell>
+    <mxCell id="igw" value="Internet Gateway&#xa;takao-igw" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.internet_gateway;labelBackgroundColor=none;sketch=0;fontStyle=0;labelPosition=center;align=center;verticalLabelPosition=bottom;fillColor=#8C4FFF;fontColor=#232F3E;strokeColor=none;" vertex="1" parent="vpc">
+      <mxGeometry x="270" y="35" width="60" height="60" as="geometry"/>
+    </mxCell>
+    <mxCell id="pub" value="Public Subnet (10.0.1.0/24) ap-northeast-1c&#xa;takao-public-subnet" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_public_subnet;strokeColor=#7AA116;fillColor=#F2F6E8;verticalAlign=top;align=center;spacingTop=25;fontStyle=0;fontSize=11;" vertex="1" parent="vpc">
+      <mxGeometry x="20" y="145" width="560" height="340" as="geometry"/>
+    </mxCell>
+    <mxCell id="ec2" value="EC2 (WordPress + MariaDB)&#xa;takao-ec2 / t2.micro" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.ec2;labelBackgroundColor=none;sketch=0;fontStyle=0;labelPosition=center;align=center;verticalLabelPosition=bottom;fillColor=#ED7100;fontColor=#232F3E;strokeColor=none;" vertex="1" parent="pub">
+      <mxGeometry x="150" y="100" width="60" height="60" as="geometry"/>
+    </mxCell>
+    <mxCell id="eip" value="Elastic IP&#xa;(EIP)" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.elastic_ip_address;labelBackgroundColor=none;sketch=0;fontStyle=0;labelPosition=center;align=center;verticalLabelPosition=bottom;fillColor=#8C4FFF;fontColor=#232F3E;strokeColor=none;" vertex="1" parent="pub">
+      <mxGeometry x="350" y="100" width="60" height="60" as="geometry"/>
+    </mxCell>
+    <mxCell id="sg_note" value="Security Group: ec2_sg&#xa;Inbound: SSH(22), HTTP(80)" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];strokeColor=#82b366;fillColor=#d5e8d4;fontSize=11;spacingLeft=6;rounded=1;" vertex="1" parent="pub">
+      <mxGeometry x="30" y="235" width="260" height="50" as="geometry"/>
+    </mxCell>
+    <mxCell id="e1" value="HTTP:80 / SSH:22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;" edge="1" source="user" target="igw" parent="1">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;" edge="1" source="igw" target="ec2" parent="vpc">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e3" value="関連付け" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;dashed=1;endArrow=open;endFill=0;" edge="1" source="eip" target="ec2" parent="pub">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+  </root>
+</mxGraphModel>
