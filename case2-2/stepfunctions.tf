@@ -3,14 +3,31 @@ resource "aws_sfn_state_machine" "notify" {
     role_arn = aws_iam_role.sfn_exec.arn
 
     definition = jsonencode({
-        Comment = "Notify Slack via Lambda"
+        Comment = "Notify Slack via ECS"
         StartAt = "NotifySlack"
         States = {
             NotifySlack = {
                 Type     = "Task"
-                Resource = aws_lambda_function.notify_slack.arn
+                Resource = "arn:aws:states:::ecs:runTask.sync"
                 Parameters = {
-                    "message.$" = "$.message"
+                    LaunchType     = "FARGATE"
+                    Cluster        = aws_ecs_cluster.main.arn
+                    TaskDefinition = aws_ecs_task_definition.notify_slack.arn
+                    NetworkConfiguration = {
+                        AwsvpcConfiguration = {
+                            Subnets        = data.aws_subnets.default.ids
+                            AssignPublicIp = "ENABLED"
+                        }
+                    }
+                    Overrides = {
+                        ContainerOverrides = [{
+                            Name = "notify-slack"
+                            Environment = [{
+                                Name      = "MESSAGE"
+                                "Value.$" = "$.message"
+                            }]
+                        }]
+                    }
                 }
                 End = true
             }
