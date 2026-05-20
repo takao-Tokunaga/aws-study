@@ -1,4 +1,5 @@
 FROM node:20-alpine AS builder
+# build stage
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
