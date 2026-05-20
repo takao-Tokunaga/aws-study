@@ -1,0 +1,7 @@
+# 秘密情報・生成ファイル
+terraform.tfvars
+*.pem
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
