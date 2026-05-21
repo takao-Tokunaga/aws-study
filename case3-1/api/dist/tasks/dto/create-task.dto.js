@@ -40,4 +40,3 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateTaskDto.prototype, "pictureS3Key", void 0);
-//# sourceMappingURL=create-task.dto.js.map

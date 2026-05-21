@@ -137,6 +137,31 @@ resource "aws_security_group" "rds" {
   tags = { Name = "${var.project}-rds-sg" }
 }
 
+# Worker ECS: SQS ポーリング用（アウトバウンドのみ）
+resource "aws_security_group" "worker_ecs" {
+  name        = "${var.project}-worker-ecs-sg"
+  description = "Worker ECS tasks"
+  vpc_id      = var.vpc_id
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = { Name = "${var.project}-worker-ecs-sg" }
+}
+
+resource "aws_security_group_rule" "rds_from_worker" {
+  type                     = "ingress"
+  from_port                = 5432
+  to_port                  = 5432
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.rds.id
+  source_security_group_id = aws_security_group.worker_ecs.id
+}
+
 # Bastion EC2
 resource "aws_security_group" "bastion" {
   name   = "${var.project}-bastion-sg"

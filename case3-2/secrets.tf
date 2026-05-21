@@ -1,5 +1,5 @@
 resource "aws_secretsmanager_secret" "slack_webhook" {
-    name                    = "case2-2/slack-webhook-url"
+    name                    = "case3-2/slack-webhook-url"
     recovery_window_in_days = 0
 }
 

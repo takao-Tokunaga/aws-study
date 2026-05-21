@@ -1,4 +1,4 @@
-# case2-2: EventBridge → Step Functions → ECS → Slack通知
+# case3-2: EventBridge → Step Functions → ECS → Slack通知
 
 EventBridge Schedulerで定期実行し、Step Functions経由でECSコンテナを起動してSlackに通知する構成。
 
@@ -23,12 +23,12 @@ Slack
 | ECS Fargate | Slackへ通知するPythonコンテナ |
 | ECR | Dockerイメージ管理 |
 | Secrets Manager | Slack Webhook URL管理 |
-| CloudWatch Logs | ECSコンテナのログ (`/ecs/case2-2-notify-slack`) |
+| CloudWatch Logs | ECSコンテナのログ (`/ecs/case3-2-notify-slack`) |
 
 ## ファイル構成
 
 ```
-case2-2/
+case3-2/
 ├── provider.tf         # AWS provider、S3 backend
 ├── variables.tf        # 変数定義
 ├── terraform.tfvars    # 変数値
@@ -95,8 +95,8 @@ cron(分 時 日 月 曜日 年)  ※ タイムゾーンはAsia/Tokyo
 ```bash
 # ECRのイメージを先に削除
 aws ecr batch-delete-image \
-  --repository-name case2-2-notify-slack \
-  --image-ids "$(aws ecr list-images --repository-name case2-2-notify-slack --profile default --query 'imageIds[*]' --output json)" \
+  --repository-name case3-2-notify-slack \
+  --image-ids "$(aws ecr list-images --repository-name case3-2-notify-slack --profile default --query 'imageIds[*]' --output json)" \
   --profile default
 
 terraform destroy

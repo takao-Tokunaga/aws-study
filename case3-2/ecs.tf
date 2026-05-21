@@ -1,14 +1,14 @@
 resource "aws_ecs_cluster" "main" {
-    name = "case2-2-cluster"
+    name = "case3-2-cluster"
 }
 
 resource "aws_cloudwatch_log_group" "ecs" {
-    name              = "/ecs/case2-2-notify-slack"
+    name              = "/ecs/case3-2-notify-slack"
     retention_in_days = 7
 }
 
 resource "aws_ecs_task_definition" "notify_slack" {
-    family                   = "case2-2-notify-slack"
+    family                   = "case3-2-notify-slack"
     requires_compatibilities = ["FARGATE"]
     network_mode             = "awsvpc"
     cpu                      = 256

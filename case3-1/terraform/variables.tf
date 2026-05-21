@@ -100,3 +100,9 @@ variable "domain_name" {
   type        = string
   default     = ""
 }
+
+variable "worker_image" {
+  description = "Worker Docker image URI"
+  type        = string
+  default     = "public.ecr.aws/nginx/nginx:latest"
+}

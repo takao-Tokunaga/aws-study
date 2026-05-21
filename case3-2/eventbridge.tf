@@ -1,5 +1,5 @@
 resource "aws_scheduler_schedule" "notify" {
-    name       = "case2-2-notify-slack"
+    name       = "case3-2-notify-slack"
     group_name = "default"
 
     flexible_time_window {

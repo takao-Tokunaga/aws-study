@@ -13,6 +13,8 @@ const typeorm_1 = require("@nestjs/typeorm");
 const tasks_module_1 = require("./tasks/tasks.module");
 const s3_module_1 = require("./s3/s3.module");
 const task_entity_1 = require("./tasks/task.entity");
+const export_job_entity_1 = require("./exports/export-job.entity");
+const exports_module_1 = require("./exports/exports.module");
 const health_controller_1 = require("./health.controller");
 let AppModule = class AppModule {
 };
@@ -31,7 +33,7 @@ exports.AppModule = AppModule = __decorate([
                     username: config.get('DB_USERNAME'),
                     password: config.get('DB_PASSWORD'),
                     database: config.get('DB_NAME'),
-                    entities: [task_entity_1.Task],
+                    entities: [task_entity_1.Task, export_job_entity_1.ExportJob],
                     synchronize: config.get('NODE_ENV') !== 'production',
                     migrations: ['dist/migrations/*.js'],
                     migrationsRun: config.get('NODE_ENV') === 'production',
@@ -41,7 +43,7 @@ exports.AppModule = AppModule = __decorate([
             }),
             tasks_module_1.TasksModule,
             s3_module_1.S3Module,
+            exports_module_1.ExportsModule,
         ],
     })
 ], AppModule);
-//# sourceMappingURL=app.module.js.map

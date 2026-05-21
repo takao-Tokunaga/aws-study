@@ -28,7 +28,6 @@ let S3Service = class S3Service {
         const command = new client_s3_1.PutObjectCommand({
             Bucket: this.bucket,
             Key: key,
-            ServerSideEncryption: 'aws:kms',
         });
         return (0, s3_request_presigner_1.getSignedUrl)(this.s3, command, { expiresIn });
     }
@@ -38,7 +37,7 @@ let S3Service = class S3Service {
             return (0, s3_request_presigner_1.getSignedUrl)(this.s3, command, { expiresIn });
         }
         return (0, cloudfront_signer_1.getSignedUrl)({
-            url: `https://${this.cloudfrontDomain}/images/${key}`,
+            url: `https://${this.cloudfrontDomain}/${key}`,
             keyPairId: this.cloudfrontKeyPairId,
             privateKey: this.cloudfrontPrivateKey,
             dateLessThan: new Date(Date.now() + expiresIn * 1000).toISOString(),
@@ -53,4 +52,3 @@ exports.S3Service = S3Service = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [config_1.ConfigService])
 ], S3Service);
-//# sourceMappingURL=s3.service.js.map

@@ -1,5 +1,5 @@
 resource "aws_sfn_state_machine" "notify" {
-    name     = "case2-2-notify-slack"
+    name     = "case3-2-notify-slack"
     role_arn = aws_iam_role.sfn_exec.arn
 
     definition = jsonencode({

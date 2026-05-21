@@ -4,6 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TasksModule } from './tasks/tasks.module';
 import { S3Module } from './s3/s3.module';
 import { Task } from './tasks/task.entity';
+import { ExportJob } from './exports/export-job.entity';
+import { ExportsModule } from './exports/exports.module';
 import { HealthController } from './health.controller';
 
 @Module({
@@ -19,7 +21,7 @@ import { HealthController } from './health.controller';
         username: config.get('DB_USERNAME'),
         password: config.get('DB_PASSWORD'),
         database: config.get('DB_NAME'),
-        entities: [Task],
+        entities: [Task, ExportJob],
         synchronize: config.get('NODE_ENV') !== 'production',
         migrations: ['dist/migrations/*.js'],
         migrationsRun: config.get('NODE_ENV') === 'production',
@@ -29,6 +31,7 @@ import { HealthController } from './health.controller';
     }),
     TasksModule,
     S3Module,
+    ExportsModule,
   ],
 })
 export class AppModule {}

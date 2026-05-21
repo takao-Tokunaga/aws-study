@@ -1,0 +1,139 @@
+<mxfile>
+  <diagram name="case3-1 アーキテクチャ">
+    <mxGraphModel adaptiveColors="auto">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="gh" value="GitHub Actions&#xa;CD Pipeline" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#24292E;fontColor=#ffffff;strokeColor=none;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="55" width="160" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="ecr" value="Amazon ECR&#xa;api / frontend / worker" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8EAF6;strokeColor=#3F51B5;" vertex="1" parent="1">
+          <mxGeometry x="260" y="55" width="170" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="user" value="ユーザー" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="750" y="40" width="80" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="cf" value="Amazon CloudFront&#xa;WAF / 署名URL / OAC" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE0B2;strokeColor=#FF6D00;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="920" y="50" width="210" height="65" as="geometry"/>
+        </mxCell>
+        <mxCell id="s3" value="Amazon S3&#xa;画像 / CSVエクスポート&#xa;(KMS暗号化・バージョニング)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF9C4;strokeColor=#F57F17;" vertex="1" parent="1">
+          <mxGeometry x="1810" y="220" width="170" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="sqs" value="Amazon SQS&#xa;csv-export queue&#xa;(可視性タイムアウト 300s)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCE4EC;strokeColor=#C62828;" vertex="1" parent="1">
+          <mxGeometry x="1810" y="400" width="170" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="cw" value="Amazon CloudWatch&#xa;Logs&#xa;(/ecs/takao-case3-1/*)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3E5F5;strokeColor=#6A1B9A;" vertex="1" parent="1">
+          <mxGeometry x="1810" y="580" width="170" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="ssm" value="SSM Parameter Store&#xa;DBパスワード&#xa;CloudFront秘密鍵" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCE4EC;strokeColor=#880E4F;" vertex="1" parent="1">
+          <mxGeometry x="1810" y="760" width="170" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="vpc" value="VPC (10.0.0.0/16)" style="swimlane;startSize=24;fillColor=#f5f5f5;strokeColor=#666666;fontStyle=1;fontSize=13;html=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="190" width="1740" height="880" as="geometry"/>
+        </mxCell>
+        <mxCell id="pub" value="パブリックサブネット (ap-northeast-1c / 1d)" style="swimlane;startSize=24;fillColor=#FFF3E0;strokeColor=#FB8C00;html=1;" vertex="1" parent="vpc">
+          <mxGeometry x="10" y="36" width="380" height="820" as="geometry"/>
+        </mxCell>
+        <mxCell id="ext_alb" value="External ALB&#xa;Port 80 HTTP" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFCCBC;strokeColor=#D84315;" vertex="1" parent="pub">
+          <mxGeometry x="20" y="60" width="200" height="65" as="geometry"/>
+        </mxCell>
+        <mxCell id="nat_gw" value="NAT Gateway × 2&#xa;Elastic IP × 2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE0B2;strokeColor=#E65100;" vertex="1" parent="pub">
+          <mxGeometry x="20" y="220" width="180" height="65" as="geometry"/>
+        </mxCell>
+        <mxCell id="bastion" value="Bastion (EC2)&#xa;SSH Port 22" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8EAF6;strokeColor=#3949AB;" vertex="1" parent="pub">
+          <mxGeometry x="20" y="380" width="160" height="65" as="geometry"/>
+        </mxCell>
+        <mxCell id="priv" value="プライベートサブネット (ap-northeast-1c / 1d)" style="swimlane;startSize=24;fillColor=#E8F5E9;strokeColor=#2E7D32;html=1;" vertex="1" parent="vpc">
+          <mxGeometry x="400" y="36" width="980" height="820" as="geometry"/>
+        </mxCell>
+        <mxCell id="frontend" value="ECS Fargate&#xa;Frontend (Next.js)&#xa;Port 3001 / 2タスク" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#B3E5FC;strokeColor=#0277BD;" vertex="1" parent="priv">
+          <mxGeometry x="20" y="65" width="195" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="int_alb" value="Internal ALB&#xa;Port 80 HTTP" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFCCBC;strokeColor=#D84315;" vertex="1" parent="priv">
+          <mxGeometry x="280" y="65" width="185" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="api" value="ECS Fargate&#xa;API (NestJS)&#xa;Port 3000 / 2タスク" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#B3E5FC;strokeColor=#0277BD;" vertex="1" parent="priv">
+          <mxGeometry x="530" y="65" width="195" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="worker" value="ECS Fargate&#xa;Worker (CSVエクスポート)&#xa;1タスク" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#B3E5FC;strokeColor=#0277BD;" vertex="1" parent="priv">
+          <mxGeometry x="280" y="310" width="200" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="db_sub" value="DBサブネット (ap-northeast-1c / 1d)" style="swimlane;startSize=24;fillColor=#E3F2FD;strokeColor=#1565C0;html=1;" vertex="1" parent="vpc">
+          <mxGeometry x="1390" y="36" width="340" height="820" as="geometry"/>
+        </mxCell>
+        <mxCell id="rds" value="Amazon RDS&#xa;PostgreSQL 15&#xa;(taskdb / gp3)" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#C8E6C9;strokeColor=#2E7D32;" vertex="1" parent="db_sub">
+          <mxGeometry x="70" y="280" width="180" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_gh_ecr" value="Push" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;" edge="1" source="gh" target="ecr" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_user_cf" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;" edge="1" source="user" target="cf" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_cf_alb" value="/* /api/*" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;" edge="1" source="cf" target="ext_alb" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_cf_s3" value="/images/* /exports/*&#xa;(OAC署名)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;" edge="1" source="cf" target="s3" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_alb_front" value="/* (デフォルト)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;" edge="1" source="ext_alb" target="frontend" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_alb_api" value="/api/*" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;" edge="1" source="ext_alb" target="api" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_front_int" value="Internal API呼び出し" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;" edge="1" source="frontend" target="int_alb" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_int_api" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;" edge="1" source="int_alb" target="api" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_api_rds" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;" edge="1" source="api" target="rds" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_api_s3" value="Presigned URL / Upload" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;" edge="1" source="api" target="s3" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_api_sqs" value="SendMessage" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;" edge="1" source="api" target="sqs" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_api_ssm" value="シークレット取得" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;" edge="1" source="api" target="ssm" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_worker_sqs" value="ReceiveMessage (ポーリング)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;" edge="1" source="worker" target="sqs" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_worker_rds" value="ジョブ参照 / 更新" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;" edge="1" source="worker" target="rds" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_worker_s3" value="CSV保存" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;" edge="1" source="worker" target="s3" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_worker_ssm" value="シークレット取得" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;" edge="1" source="worker" target="ssm" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_ecr_api" value="image pull" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;" edge="1" source="ecr" target="api" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_ecr_front" value="image pull" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;" edge="1" source="ecr" target="frontend" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_ecr_worker" value="image pull" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;" edge="1" source="ecr" target="worker" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_bastion_rds" value="SSH tunnel" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;" edge="1" source="bastion" target="rds" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_api_cw" value="logs" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;strokeColor=#6A1B9A;" edge="1" source="api" target="cw" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_front_cw" value="logs" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;strokeColor=#6A1B9A;" edge="1" source="frontend" target="cw" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_worker_cw" value="logs" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;strokeColor=#6A1B9A;" edge="1" source="worker" target="cw" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

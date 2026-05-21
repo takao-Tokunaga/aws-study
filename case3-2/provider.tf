@@ -7,7 +7,7 @@ terraform {
     }
     backend "s3" {
         bucket  = "takao-terraform-tfstate"
-        key     = "takao-case2-2.tfstate"
+        key     = "takao-case3-2.tfstate"
         region  = "ap-northeast-1"
         profile = "default"
     }

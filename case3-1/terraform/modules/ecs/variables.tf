@@ -32,3 +32,7 @@ variable "cloudfront_private_key" {
 }
 variable "internal_alb_dns" { type = string }
 variable "aws_region"       { type = string }
+variable "worker_sg_id"     { type = string }
+variable "worker_image"     { type = string }
+variable "sqs_queue_url"    { type = string }
+variable "sqs_queue_arn"    { type = string }

@@ -41,7 +41,7 @@ let TasksController = class TasksController {
         return this.tasksService.remove(id);
     }
     async getUploadUrl(filename) {
-        const key = `tasks/${Date.now()}-${filename}`;
+        const key = `images/tasks/${Date.now()}-${filename}`;
         const uploadUrl = await this.s3Service.getPresignedUploadUrl(key);
         return { uploadUrl, key };
     }
@@ -114,4 +114,3 @@ exports.TasksController = TasksController = __decorate([
     __metadata("design:paramtypes", [tasks_service_1.TasksService,
         s3_service_1.S3Service])
 ], TasksController);
-//# sourceMappingURL=tasks.controller.js.map

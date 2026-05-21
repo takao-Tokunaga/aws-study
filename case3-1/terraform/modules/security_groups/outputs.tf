@@ -4,3 +4,6 @@ output "api_ecs_sg_id"      { value = aws_security_group.api_ecs.id }
 output "frontend_ecs_sg_id" { value = aws_security_group.frontend_ecs.id }
 output "rds_sg_id"          { value = aws_security_group.rds.id }
 output "bastion_sg_id"      { value = aws_security_group.bastion.id }
+output "worker_ecs_sg_id" {
+  value = aws_security_group.worker_ecs.id
+}

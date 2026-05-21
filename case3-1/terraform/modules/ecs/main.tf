@@ -100,6 +100,11 @@ resource "aws_iam_role_policy" "api_s3" {
         Effect   = "Allow"
         Action   = ["secretsmanager:GetSecretValue"]
         Resource = "*"
+      },
+      {
+        Effect   = "Allow"
+        Action   = ["sqs:SendMessage"]
+        Resource = var.sqs_queue_arn
       }
     ]
   })
@@ -110,6 +115,37 @@ resource "aws_iam_role" "frontend_task" {
   assume_role_policy = data.aws_iam_policy_document.ecs_task_assume_role.json
 }
 
+resource "aws_iam_role" "worker_task" {
+  name               = "${var.project}-worker-task-role"
+  assume_role_policy = data.aws_iam_policy_document.ecs_task_assume_role.json
+}
+
+resource "aws_iam_role_policy" "worker_policy" {
+  name = "${var.project}-worker-policy"
+  role = aws_iam_role.worker_task.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = ["sqs:ReceiveMessage", "sqs:DeleteMessage", "sqs:GetQueueAttributes"]
+        Resource = var.sqs_queue_arn
+      },
+      {
+        Effect = "Allow"
+        Action = ["s3:PutObject", "s3:GetObject"]
+        Resource = ["arn:aws:s3:::${var.s3_bucket_name}/*"]
+      },
+      {
+        Effect = "Allow"
+        Action = ["kms:GenerateDataKey", "kms:Decrypt"]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
 # ─── CloudWatch Logs ──────────────────────────────────────────────────────────
 resource "aws_cloudwatch_log_group" "api" {
   name              = "/ecs/${var.project}/api"
@@ -118,6 +154,11 @@ resource "aws_cloudwatch_log_group" "api" {
 
 resource "aws_cloudwatch_log_group" "frontend" {
   name              = "/ecs/${var.project}/frontend"
+  retention_in_days = 30
+}
+
+resource "aws_cloudwatch_log_group" "worker" {
+  name              = "/ecs/${var.project}/worker"
   retention_in_days = 30
 }
 
@@ -152,7 +193,8 @@ resource "aws_ecs_task_definition" "api" {
       { name = "S3_BUCKET_REGION",  value = var.s3_bucket_region },
       { name = "CLOUDFRONT_DOMAIN",       value = var.cloudfront_domain },
       { name = "CLOUDFRONT_KEY_PAIR_ID",  value = var.cloudfront_key_pair_id },
-      { name = "AWS_REGION",              value = var.aws_region }
+      { name = "AWS_REGION",              value = var.aws_region },
+      { name = "SQS_QUEUE_URL",           value = var.sqs_queue_url }
     ]
 
     secrets = [
@@ -302,4 +344,69 @@ resource "aws_ecs_service" "frontend" {
   }
 
   tags = { Name = "${var.project}-frontend-service" }
+}
+
+# ─── Worker Task Definition ───────────────────────────────────────────────────
+resource "aws_ecs_task_definition" "worker" {
+  family                   = "${var.project}-worker"
+  network_mode             = "awsvpc"
+  requires_compatibilities = ["FARGATE"]
+  cpu                      = "256"
+  memory                   = "512"
+  execution_role_arn       = aws_iam_role.ecs_execution.arn
+  task_role_arn            = aws_iam_role.worker_task.arn
+
+  container_definitions = jsonencode([{
+    name      = "worker"
+    image     = var.worker_image
+    essential = true
+
+    environment = [
+      { name = "AWS_REGION",     value = var.aws_region },
+      { name = "SQS_QUEUE_URL",  value = var.sqs_queue_url },
+      { name = "S3_BUCKET_NAME", value = var.s3_bucket_name },
+      { name = "DB_HOST",        value = var.db_host },
+      { name = "DB_PORT",        value = "5432" },
+      { name = "DB_NAME",        value = var.db_name },
+      { name = "DB_USERNAME",    value = var.db_username }
+    ]
+
+    secrets = [
+      { name = "DB_PASSWORD", valueFrom = aws_ssm_parameter.db_password.arn }
+    ]
+
+    logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        "awslogs-group"         = aws_cloudwatch_log_group.worker.name
+        "awslogs-region"        = var.aws_region
+        "awslogs-stream-prefix" = "worker"
+      }
+    }
+  }])
+}
+
+resource "aws_ecs_service" "worker" {
+  name            = "${var.project}-worker"
+  cluster         = aws_ecs_cluster.main.id
+  task_definition = aws_ecs_task_definition.worker.arn
+  desired_count   = 1
+  launch_type     = "FARGATE"
+
+  network_configuration {
+    subnets          = var.private_subnet_ids
+    security_groups  = [var.worker_sg_id]
+    assign_public_ip = false
+  }
+
+  deployment_circuit_breaker {
+    enable   = true
+    rollback = true
+  }
+
+  lifecycle {
+    ignore_changes = [task_definition, desired_count]
+  }
+
+  tags = { Name = "${var.project}-worker-service" }
 }

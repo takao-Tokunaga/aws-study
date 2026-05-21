@@ -80,6 +80,11 @@ module "cloudfront" {
   cloudfront_public_key_pem = var.cloudfront_public_key_pem
 }
 
+module "sqs" {
+  source  = "./modules/sqs"
+  project = var.project
+}
+
 module "ecs" {
   source                    = "./modules/ecs"
   project                   = var.project
@@ -106,6 +111,10 @@ module "ecs" {
   cloudfront_private_key    = var.cloudfront_private_key_pem
   internal_alb_dns          = module.alb.internal_alb_dns_name
   aws_region                = var.aws_region
+  worker_sg_id              = module.security_groups.worker_ecs_sg_id
+  worker_image              = var.worker_image
+  sqs_queue_url             = module.sqs.queue_url
+  sqs_queue_arn             = module.sqs.queue_arn
 }
 
 # CloudFront の S3 アクセス許可（OAC 用）

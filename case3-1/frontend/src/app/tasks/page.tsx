@@ -102,6 +102,41 @@ export default function TasksPage() {
     await fetchTasks();
   };
 
+  const [exporting, setExporting] = useState(false);
+
+  const exportCsv = async () => {
+    setExporting(true);
+    try {
+      const res = await fetch(`${API}/exports`, { method: 'POST' });
+      const job = await res.json();
+      let jobId: number = job.id;
+
+      // ステータスが complete になるまでポーリング（最大60秒）
+      for (let i = 0; i < 30; i++) {
+        await new Promise(r => setTimeout(r, 2000));
+        const statusRes = await fetch(`${API}/exports/${jobId}`);
+        const j = await statusRes.json();
+        if (j.status === 'complete' && j.downloadUrl) {
+          const a = document.createElement('a');
+          a.href = j.downloadUrl;
+          a.download = `tasks-${jobId}.csv`;
+          a.click();
+          return;
+        }
+        if (j.status === 'failed') {
+          alert('CSVエクスポートに失敗しました');
+          return;
+        }
+      }
+      alert('タイムアウトしました。しばらくして再度お試しください。');
+    } catch (e) {
+      console.error('Export error:', e);
+      alert('エクスポートエラーが発生しました');
+    } finally {
+      setExporting(false);
+    }
+  };
+
   return (
     <div>
       {/* 新規作成フォーム */}
@@ -134,6 +169,17 @@ export default function TasksPage() {
             {submitting ? '作成中...' : '作成'}
           </button>
         </form>
+      </div>
+
+      {/* CSV エクスポート */}
+      <div style={{ marginBottom: 16, textAlign: 'right' }}>
+        <button
+          onClick={exportCsv}
+          disabled={exporting}
+          style={{ padding: '8px 16px', background: '#10b981', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 14 }}
+        >
+          {exporting ? 'エクスポート中...' : 'CSV出力'}
+        </button>
       </div>
 
       {/* タスク一覧 */}

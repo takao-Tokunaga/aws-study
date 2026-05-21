@@ -6,15 +6,20 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.S3Module = void 0;
+exports.ExportsModule = void 0;
 const common_1 = require("@nestjs/common");
-const s3_service_1 = require("./s3.service");
-let S3Module = class S3Module {
+const typeorm_1 = require("@nestjs/typeorm");
+const export_job_entity_1 = require("./export-job.entity");
+const exports_service_1 = require("./exports.service");
+const exports_controller_1 = require("./exports.controller");
+const s3_module_1 = require("../s3/s3.module");
+let ExportsModule = class ExportsModule {
 };
-exports.S3Module = S3Module;
-exports.S3Module = S3Module = __decorate([
+exports.ExportsModule = ExportsModule;
+exports.ExportsModule = ExportsModule = __decorate([
     (0, common_1.Module)({
-        providers: [s3_service_1.S3Service],
-        exports: [s3_service_1.S3Service],
+        imports: [typeorm_1.TypeOrmModule.forFeature([export_job_entity_1.ExportJob]), s3_module_1.S3Module],
+        controllers: [exports_controller_1.ExportsController],
+        providers: [exports_service_1.ExportsService],
     })
-], S3Module);
+], ExportsModule);
