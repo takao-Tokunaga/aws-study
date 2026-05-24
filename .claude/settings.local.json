@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(aws ecs *)"
+      "Bash(aws ecs *)",
+      "Bash(git -C /Users/takao/dev/aws-study remote get-url origin)"
     ]
   }
 }

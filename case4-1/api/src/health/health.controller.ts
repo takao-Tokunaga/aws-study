@@ -7,6 +7,6 @@ export class HealthController {
   @Get()
   @ApiOperation({ summary: 'ヘルスチェック' })
   check() {
-    return { status: 'ok', timestamp: new Date().toISOString(), version: 'case4-2-ec2' };
+    return { status: 'ok', timestamp: new Date().toISOString() };
   }
 }
