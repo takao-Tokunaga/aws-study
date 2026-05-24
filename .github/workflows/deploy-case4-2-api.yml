@@ -1,0 +1,99 @@
+name: Deploy case4-2 API
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "case4-2/api/**"
+      - ".github/workflows/deploy-case4-2-api.yml"
+
+env:
+  AWS_REGION:      ap-northeast-1
+  EC2_NAME_TAG:    takao-case4-2-api
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN_CASE4_2 }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Get EC2 instance ID
+        id: ec2
+        run: |
+          INSTANCE_ID=$(aws ec2 describe-instances \
+            --filters \
+              "Name=tag:Name,Values=${{ env.EC2_NAME_TAG }}" \
+              "Name=instance-state-name,Values=running" \
+            --query "Reservations[0].Instances[0].InstanceId" \
+            --output text)
+
+          if [ -z "$INSTANCE_ID" ] || [ "$INSTANCE_ID" = "None" ]; then
+            echo "ERROR: running EC2 instance not found (tag Name=${{ env.EC2_NAME_TAG }})"
+            exit 1
+          fi
+
+          echo "instance_id=$INSTANCE_ID" >> "$GITHUB_OUTPUT"
+          echo "Instance ID: $INSTANCE_ID"
+
+      - name: Deploy via SSM Run Command
+        id: ssm
+        run: |
+          COMMAND_ID=$(aws ssm send-command \
+            --instance-ids "${{ steps.ec2.outputs.instance_id }}" \
+            --document-name "AWS-RunShellScript" \
+            --parameters 'commands=[
+              "set -e",
+              "cd /app && git pull origin main",
+              "cd /app/case4-2/api && npm ci && npm run build",
+              "systemctl restart api",
+              "echo Deploy succeeded"
+            ]' \
+            --timeout-seconds 300 \
+            --cloud-watch-output-config "CloudWatchOutputEnabled=true" \
+            --query "Command.CommandId" \
+            --output text)
+
+          echo "command_id=$COMMAND_ID" >> "$GITHUB_OUTPUT"
+          echo "SSM Command ID: $COMMAND_ID"
+
+      - name: Wait for deployment to complete
+        run: |
+          aws ssm wait command-executed \
+            --command-id "${{ steps.ssm.outputs.command_id }}" \
+            --instance-id "${{ steps.ec2.outputs.instance_id }}"
+
+      - name: Check deployment result
+        run: |
+          RESULT=$(aws ssm get-command-invocation \
+            --command-id "${{ steps.ssm.outputs.command_id }}" \
+            --instance-id "${{ steps.ec2.outputs.instance_id }}")
+
+          STATUS=$(echo "$RESULT" | jq -r '.Status')
+          STDOUT=$(echo "$RESULT" | jq -r '.StandardOutputContent')
+          STDERR=$(echo "$RESULT" | jq -r '.StandardErrorContent')
+
+          echo "=== stdout ==="
+          echo "$STDOUT"
+
+          if [ -n "$STDERR" ]; then
+            echo "=== stderr ==="
+            echo "$STDERR"
+          fi
+
+          if [ "$STATUS" != "Success" ]; then
+            echo "Deployment failed with status: $STATUS"
+            exit 1
+          fi
+
+          echo "Deployment successful!"
