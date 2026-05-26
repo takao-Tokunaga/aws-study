@@ -88,8 +88,8 @@ resource "aws_cloudwatch_metric_alarm" "ecs_cpu" {
     ServiceName = var.ecs_service_name
   }
 
-  alarm_actions = [aws_sns_topic.alarm.arn]
-  ok_actions    = [aws_sns_topic.alarm.arn]
+  alarm_actions = []
+  ok_actions    = []
 
   tags = { Name = "${var.project}-ecs-cpu-alarm" }
 }
