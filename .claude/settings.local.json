@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(aws ecs *)",
-      "Bash(git -C /Users/takao/dev/aws-study remote get-url origin)"
+      "Bash(git -C /Users/takao/dev/aws-study remote get-url origin)",
+      "Bash(xargs -I{} aws ecs describe-tasks --cluster async-comparison-cluster --tasks {} --region ap-northeast-1 --query 'tasks[0].{stopped:stoppedReason,stoppedAt:stoppedAt}' --output json)"
     ]
   }
 }
